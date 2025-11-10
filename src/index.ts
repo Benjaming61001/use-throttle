@@ -33,3 +33,5 @@ export function throttle<T extends AnyFunction> (
     }
   }
 }
+
+export default { throttle }

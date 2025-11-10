@@ -1,0 +1,31 @@
+{
+  "name": "@benjaming61001/use-throttle",
+  "version": "1.0.0",
+  "description": "A lightweight TypeScript throttle function implementation that fires on the leading edge, preserving this context and parameters.",
+  "main": "index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Benjaming61001/use-throttle.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Benjaming61001/use-throttle/issues"
+  },
+  "homepage": "https://github.com/Benjaming61001/use-throttle#readme",
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  }
+}
