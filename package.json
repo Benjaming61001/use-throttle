@@ -1,6 +1,6 @@
 {
   "name": "@benjaming61001/use-throttle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A lightweight TypeScript throttle function implementation that fires on the leading edge, preserving this context and parameters.",
   "main": "index.js",
   "module": "dist/index.mjs",
