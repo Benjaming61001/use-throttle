@@ -5,12 +5,13 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout repository
