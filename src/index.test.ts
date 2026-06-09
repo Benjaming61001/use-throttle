@@ -134,10 +134,10 @@ describe('throttle', () => {
     const throttled = throttle(fn, 500)
 
     throttled()
-    throttled.flush()
+    throttled.flush() // no pending trailing call — leading already fired, no queued calls
     throttled.cancel()
 
     vi.advanceTimersByTime(500)
-    expect(fn).toHaveBeenCalledTimes(2)
+    expect(fn).toHaveBeenCalledTimes(1)
   })
 })

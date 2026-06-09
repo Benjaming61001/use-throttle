@@ -27,6 +27,8 @@ export function throttle<T extends AnyFunction>(
 
     if (!inThrottle) {
       func.apply(this, args)
+      lastArgs = null
+      lastThis = null
       inThrottle = true
 
       timeoutId = setTimeout((): void => {
