@@ -1,37 +1,61 @@
-/**
- * A generic type constraint for any function.
- */
 type AnyFunction = (...args: any[]) => any
 
-/**
- * Creates a throttled function factory.
- *
- * This function returns a new, throttled version of the passed function (`func`).
- * The throttled function will only be invoked at most once per every `limit`
- * milliseconds.
- *
- * This implementation invokes the function on the "leading edge" of the timeout.
- *
- * @param func The function to throttle.
- * @param limit The number of milliseconds to throttle invocations to.
- * @returns A new, throttled function.
- */
-export function throttle<T extends AnyFunction> (
+type ThrottledFn<TArgs extends any[]> = ((...args: TArgs) => void) & {
+  cancel: () => void
+  flush: () => void
+}
+
+export function throttle<T extends AnyFunction>(
   func: T,
   limit: number
-): (this: ThisParameterType<T>, ...args: Parameters<T>) => void {
+): ThrottledFn<Parameters<T>> {
   let inThrottle: boolean = false
-  return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
+  let lastArgs: Parameters<T> | null = null
+  let lastThis: unknown = null
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
+
+  function cleanup(): void {
+    inThrottle = false
+    lastArgs = null
+    lastThis = null
+    timeoutId = null
+  }
+
+  const throttled = function (this: unknown, ...args: Parameters<T>): void {
+    lastArgs = args as Parameters<T>
+    lastThis = this
+
     if (!inThrottle) {
       func.apply(this, args)
-
       inThrottle = true
 
-      setTimeout((): void => {
-        inThrottle = false
+      timeoutId = setTimeout((): void => {
+        if (lastArgs !== null) {
+          func.apply(lastThis, lastArgs)
+        }
+        cleanup()
       }, limit)
     }
+  } as ThrottledFn<Parameters<T>>
+
+  throttled.cancel = (): void => {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId)
+    }
+    cleanup()
   }
+
+  throttled.flush = (): void => {
+    if (inThrottle && lastArgs !== null) {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId)
+      }
+      func.apply(lastThis, lastArgs)
+      cleanup()
+    }
+  }
+
+  return throttled
 }
 
 export default { throttle }
